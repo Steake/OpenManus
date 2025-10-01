@@ -30,8 +30,8 @@ class SQLConnect(BaseTool):
         "properties": {
             "driver": {
                 "type": "string",
-                "description": "Database driver (e.g., 'postgresql' for Postgres, 'mysql' for MySQL).",
-                "enum": ["postgresql", "mysql"],
+                "description": "Database driver (e.g., 'postgresql' for Postgres, 'mysql' for MySQL, 'sqlite' for SQLite).",
+                "enum": ["postgresql", "mysql", "sqlite"],
             },
             "host": {
                 "type": "string",
@@ -190,7 +190,7 @@ class SQLInsert(BaseTool):
             else:
                 value = values[0]  # First for demo; implement bulk
 
-            if "driver" not in conn.url:  # Placeholder, actually check dialect
+            if conn.dialect.name not in ("postgresql", "mysql"):  # Generic insert for non-Postgres/MySQL
                 # Generic insert
                 with conn.connect() as c:
                     columns = list(value.keys())

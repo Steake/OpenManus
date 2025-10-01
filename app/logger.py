@@ -5,7 +5,6 @@ from loguru import logger as _logger
 
 from app.config import PROJECT_ROOT
 
-
 _print_level = "INFO"
 
 
@@ -22,7 +21,8 @@ def define_log_level(print_level="INFO", logfile_level="DEBUG", name: str = None
 
     _logger.remove()
     _logger.add(sys.stderr, level=print_level)
-    _logger.add(PROJECT_ROOT / f"logs/{log_name}.log", level=logfile_level)
+    # Write logs to repo root output.log (no rotation)
+    _logger.add(PROJECT_ROOT / "output.log", level=logfile_level)
     return _logger
 
 

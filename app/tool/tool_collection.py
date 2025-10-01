@@ -1,4 +1,5 @@
 """Collection classes for managing multiple tools."""
+
 from typing import Any, Dict, List
 
 from app.exceptions import ToolError
@@ -69,3 +70,57 @@ class ToolCollection:
         for tool in tools:
             self.add_tool(tool)
         return self
+
+
+def create_full_collection() -> "ToolCollection":
+    """Create a ToolCollection with all available tools instantiated."""
+    from .agent_swarm_tester import AgentSwarmTester
+    from .ai_ml_tools import EmbeddingsSearchTool
+    from .ask_human import AskHuman
+    from .bash import Bash
+    from .browser_use_tool import BrowserUseTool
+    from .computer_use_tool import ComputerUseTool
+    from .crawl4ai import Crawl4aiTool
+    from .create_chat_completion import CreateChatCompletion
+    from .evol_optimizer import EvolCodeOptimizer
+    from .neuro_pattern_matcher import NeuroPatternMatcher
+    from .planning import PlanningTool
+    from .psyche_debugger import PsycheDebugger
+    from .python_execute import PythonExecute
+    from .sql_tools import (
+        SchemaViewer,
+        SQLConnect,
+        SQLDelete,
+        SQLInsert,
+        SQLQuery,
+        SQLUpdate,
+    )
+    from .str_replace_editor import StrReplaceEditor
+    from .terminate import Terminate
+    from .web_search import WebSearch
+
+    tools = [
+        AgentSwarmTester(),
+        EmbeddingsSearchTool(),
+        AskHuman(),
+        Bash(),
+        BrowserUseTool(),
+        ComputerUseTool(),
+        Crawl4aiTool(),
+        CreateChatCompletion(),
+        EvolCodeOptimizer(),
+        NeuroPatternMatcher(),
+        PlanningTool(),
+        PsycheDebugger(),
+        PythonExecute(),
+        SchemaViewer(),
+        SQLConnect(),
+        SQLDelete(),
+        SQLInsert(),
+        SQLQuery(),
+        SQLUpdate(),
+        StrReplaceEditor(),
+        Terminate(),
+        WebSearch(),
+    ]
+    return ToolCollection(*tools)

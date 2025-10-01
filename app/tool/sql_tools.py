@@ -30,8 +30,8 @@ class SQLConnect(BaseTool):
         "properties": {
             "driver": {
                 "type": "string",
-                "description": "Database driver (e.g., 'postgresql' for Postgres, 'mysql' for MySQL).",
-                "enum": ["postgresql", "mysql"],
+                "description": "Database driver (e.g., 'postgresql' for Postgres, 'mysql' for MySQL, 'sqlite' for SQLite).",
+                "enum": ["postgresql", "mysql", "sqlite"],
             },
             "host": {
                 "type": "string",

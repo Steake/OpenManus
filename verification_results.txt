@@ -1,0 +1,54 @@
+============================================================
+PsycheDebugger Integration Verification
+============================================================
+
+1. Creating tool collection...
+   ✓ Tool collection created successfully
+
+2. Retrieving PsycheDebugger from collection...
+   ✓ PsycheDebugger retrieved: psyche_debugger
+   ✓ Description: Profile code 'mood' via sentiment on comments/identifiers and structure analysis...
+
+3. Testing with POSITIVE code sample...
+   Code sample prepared
+   ✓ Analysis completed successfully
+   Output type: <class 'str'>
+   Output preview (first 300 chars):
+   {
+  "mood_profile": {
+    "overall_sentiment": "anxious",
+    "overall_score": -0.16249999999999998,
+    "sectional_scores": {
+      "comments": {
+        "pos": 0.75,
+        "neg": 0,
+        "compound_avg": 0.34375
+      },
+      "identifiers": {
+        "pos": 0.0,
+        "neg": 0,
+        "com
+
+4. Testing with NEGATIVE code sample...
+   Code sample prepared
+   ✓ Analysis completed successfully
+   Output type: <class 'str'>
+   Output preview (first 300 chars):
+   {
+  "mood_profile": {
+    "overall_sentiment": "anxious",
+    "overall_score": -0.9627760000000001,
+    "sectional_scores": {
+      "comments": {
+        "pos": 0.0,
+        "neg": 4,
+        "compound_avg": -0.38194
+      },
+      "identifiers": {
+        "pos": 0.0,
+        "neg": 0,
+        "comp
+
+============================================================
+VERIFICATION COMPLETE - ALL TESTS PASSED ✓
+============================================================

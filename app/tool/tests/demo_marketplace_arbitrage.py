@@ -226,21 +226,21 @@ async def scenario_2_find_opportunities():
         print(f"   ⭐ Rating: {product['rating']} ({product['reviews']} reviews)")
         print()
 
-    # Summary statistics
+    # Summary statistics with zero division guards
     print_section("Summary Statistics")
     total_profit = sum(opp["profit"]["net_profit"] for opp in opportunities)
-    avg_margin = (
-        sum(opp["profit"]["profit_margin"] for opp in opportunities)
-        / len(opportunities)
-        if opportunities
-        else 0
-    )
-    avg_roi = (
-        sum(opp["profit"]["roi_percentage"] for opp in opportunities)
-        / len(opportunities)
-        if opportunities
-        else 0
-    )
+
+    # Guard against division by zero
+    if len(opportunities) > 0:
+        avg_margin = sum(opp["profit"]["profit_margin"] for opp in opportunities) / len(
+            opportunities
+        )
+        avg_roi = sum(opp["profit"]["roi_percentage"] for opp in opportunities) / len(
+            opportunities
+        )
+    else:
+        avg_margin = 0
+        avg_roi = 0
 
     print(f"✅ Profitable Products Found:  {len(opportunities)}/{len(TEST_PRODUCTS)}")
     print(f"💰 Total Potential Profit:     {format_currency(total_profit)}")
@@ -282,28 +282,39 @@ async def scenario_3_monitor_competition():
             f"{entry['date']}  {format_currency(entry['price']):>8}  ({entry['competitors']} competitors)"
         )
 
-    # Price analysis
+    # Price analysis with zero division guards
     print_section("Competitive Analysis")
 
     current_price = price_history[-1]["price"]
     lowest_price = min(e["price"] for e in price_history)
     highest_price = max(e["price"] for e in price_history)
-    avg_price = sum(e["price"] for e in price_history) / len(price_history)
+
+    # Guard against empty list and zero average
+    if len(price_history) > 0:
+        avg_price = sum(e["price"] for e in price_history) / len(price_history)
+    else:
+        avg_price = 0
 
     print(f"Current Price:       {format_currency(current_price)}")
     print(f"7-Day Average:       {format_currency(avg_price)}")
     print(f"7-Day Low:           {format_currency(lowest_price)}")
     print(f"7-Day High:          {format_currency(highest_price)}")
-    print(
-        f"Price Volatility:    {format_percentage((highest_price - lowest_price) / avg_price)}"
-    )
+
+    # Guard against zero average price
+    if avg_price > 0:
+        volatility = (highest_price - lowest_price) / avg_price
+    else:
+        volatility = 0
+    print(f"Price Volatility:    {format_percentage(volatility)}")
     print(f"Active Competitors:  {price_history[-1]['competitors']}")
     print()
 
     # Pricing recommendation
     print_section("Pricing Recommendation")
 
-    recommended_price = avg_price * 0.98  # Slightly below average
+    recommended_price = (
+        avg_price * 0.98 if avg_price > 0 else product["target_price"] * 0.98
+    )  # Fallback to target price if avg is 0
 
     print(f"💡 Recommended Price: {format_currency(recommended_price)}")
     print(f"   Strategy: Price 2% below average to be competitive")
@@ -490,9 +501,12 @@ async def scenario_5_rate_limiting():
     print(f"   Result: {format_currency(profit2['net_profit'])} profit")
     print()
 
-    if time2 < time1:
-        speedup = time1 / time2 if time2 > 0 else float("inf")
+    # Guard against zero division when calculating speedup
+    if time2 > 0:
+        speedup = time1 / time2
         print(f"⚡ Cache speedup: {speedup:.1f}x faster")
+    else:
+        print(f"⚡ Cache speedup: Instant (from cache)")
 
 
 async def scenario_6_error_handling():
@@ -578,11 +592,18 @@ async def run_demo_summary(opportunities: List[Dict], profit_example: Dict):
     print("📈 Key Metrics:")
     print(f"   Products Analyzed:           {len(TEST_PRODUCTS)}")
     print(f"   Profitable Opportunities:    {len(opportunities)}")
-    print(
-        f"   Average Profit Margin:       {format_percentage(sum(o['profit']['profit_margin'] for o in opportunities) / len(opportunities))}"
-    )
 
-    total_potential_profit = sum(o["profit"]["net_profit"] for o in opportunities)
+    # Guard against zero division for average calculations
+    if len(opportunities) > 0:
+        avg_profit_margin = sum(
+            o["profit"]["profit_margin"] for o in opportunities
+        ) / len(opportunities)
+        total_potential_profit = sum(o["profit"]["net_profit"] for o in opportunities)
+    else:
+        avg_profit_margin = 0
+        total_potential_profit = 0
+
+    print(f"   Average Profit Margin:       {format_percentage(avg_profit_margin)}")
     print(f"   Total Potential Profit:      {format_currency(total_potential_profit)}")
 
     # Monthly revenue estimate (assuming 1 sale per product per week)
